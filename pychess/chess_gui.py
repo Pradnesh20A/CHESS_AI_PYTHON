@@ -1,10 +1,8 @@
-#
+
 # The GUI engine for Python Chess
-#
-# Author: Boo Sung Kim, Eddie Sharick
-# Note: The pygame tutorial by Eddie Sharick was used for the GUI engine. The GUI code was altered by Boo Sung Kim to
-# fit in with the rest of the project.
-#
+
+# Author: A.Pradnesh - 19MIS0131
+
 import chess_engine
 from button import Button
 import pygame as py
@@ -13,13 +11,13 @@ import ai_engine
 from enums import Player
 
 """Variables"""
-WIDTH = HEIGHT = 512  # width and height of the chess board
-CENTER = 256
+WIDTH = HEIGHT = 758  # width and height of the chess board
+CENTER = 384
 DIMENSION = 8  # the dimensions of the chess board
 SQ_SIZE = HEIGHT // DIMENSION  # the size of each of the squares in the board
 MAX_FPS = 15  # FPS for animations
 IMAGES = {}  # images for the chess pieces
-colors = [py.Color("white"), py.Color("gray")]
+colors = [py.Color("#FFF5EE"), py.Color("#3D9140")]
 
 py.init()
 SCREEN = py.display.set_mode((WIDTH, HEIGHT))
@@ -98,7 +96,49 @@ def draw_text(screen, text):
     text_location = py.Rect(0, 0, WIDTH, HEIGHT).move(WIDTH / 2 - text_object.get_width() / 2,
                                                       HEIGHT / 2 - text_object.get_height() / 2)
     screen.blit(text_object, text_location)
+def help():
+    #print("Heh help is working")
+    #SCREEN.fill("black")
+    py.display.set_caption("CHESS HELP")
 
+    while True:
+        SCREEN.blit(BACKGROUND, (0,0))
+
+        MENU_MOUSE_POS = py.mouse.get_pos()
+
+        MENU_TEXT = get_font(25).render("INSTRUCTIONS ABOUT CHESS-AI", True, "#b68f40")
+        MENU_RECT = MENU_TEXT.get_rect(center=(CENTER, 50))
+        SCREEN.blit(MENU_TEXT, MENU_RECT)
+
+        CREDIT_TEXT = get_font(15).render("To undo a move, Press U", True, "#b68f40")
+        CREDIT_RECT = MENU_TEXT.get_rect(center=(CENTER + 10, 150))
+        SCREEN.blit(CREDIT_TEXT, CREDIT_RECT)
+
+
+        CREDIT_TEXT = get_font(15).render("To reset the board, Press R", True, "#b68f40")
+        CREDIT_RECT = MENU_TEXT.get_rect(center=(CENTER + 10, 200))
+        SCREEN.blit(CREDIT_TEXT, CREDIT_RECT)
+
+        
+        QUIT_BUTTON = Button(image=py.image.load("images/menu/PlayRect.png"), pos=(CENTER, 650), text_input="Quit", font=get_font(25), base_color="#d7fcd4", hovering_color="White")
+
+
+        for button in [ QUIT_BUTTON]:
+            button.changeColor(MENU_MOUSE_POS)
+            button.update(SCREEN)
+        
+        for event in py.event.get():
+            if event.type == py.QUIT:
+                py.exit()
+            if event.type == py.MOUSEBUTTONDOWN:
+                if QUIT_BUTTON.checkForInput(MENU_MOUSE_POS):
+                    py.exit()
+
+
+
+        py.display.update()
+
+    
 def single_player():
     SCREEN.fill("black")
     clock = py.time.Clock()
@@ -252,26 +292,27 @@ def multi_player():
         py.display.flip()
 
 def menu():
-    py.display.set_caption("Menu")
+    py.display.set_caption("PRADNESH - 19MIS0131")
 
     while True:
         SCREEN.blit(BACKGROUND, (0,0))
 
         MENU_MOUSE_POS = py.mouse.get_pos()
 
-        MENU_TEXT = get_font(45).render("Chess", True, "#b68f40")
+        MENU_TEXT = get_font(45).render("CHESS-AI", True, "#b68f40")
         MENU_RECT = MENU_TEXT.get_rect(center=(CENTER, 50))
         SCREEN.blit(MENU_TEXT, MENU_RECT)
 
-        CREDIT_TEXT = get_font(15).render("by Boosung Kim", True, "#b68f40")
-        CREDIT_RECT = MENU_TEXT.get_rect(center=(CENTER + 7, 100))
+        CREDIT_TEXT = get_font(15).render("<Choose the Mode>", True, "#b68f40")
+        CREDIT_RECT = MENU_TEXT.get_rect(center=(CENTER + 50, 150))
         SCREEN.blit(CREDIT_TEXT, CREDIT_RECT)
 
-        SINGLE_PLAYER_BUTTON = Button(image=py.image.load("images/menu/PlayRect.png"), pos=(CENTER, 160), text_input="Single Player", font=get_font(25), base_color="#d7fcd4", hovering_color="White")
-        MULTI_PLAYER_BUTTON = Button(image=py.image.load("images/menu/PlayRect.png"), pos=(CENTER, 285), text_input="Multi Player", font=get_font(25), base_color="#d7fcd4", hovering_color="White")
-        QUIT_BUTTON = Button(image=py.image.load("images/menu/PlayRect.png"), pos=(CENTER, 410), text_input="Quit", font=get_font(25), base_color="#d7fcd4", hovering_color="White")
+        SINGLE_PLAYER_BUTTON = Button(image=py.image.load("images/menu/PlayRect.png"), pos=(CENTER, 210), text_input="Single Player", font=get_font(25), base_color="#d7fcd4", hovering_color="White")
+        MULTI_PLAYER_BUTTON = Button(image=py.image.load("images/menu/PlayRect.png"), pos=(CENTER, 335), text_input="Multi Player", font=get_font(25), base_color="#d7fcd4", hovering_color="White")
+        QUIT_BUTTON = Button(image=py.image.load("images/menu/PlayRect.png"), pos=(CENTER, 460), text_input="Quit", font=get_font(25), base_color="#d7fcd4", hovering_color="White")
+        HELP_BUTTON = Button(image=py.image.load("images/menu/PlayRect.png"), pos=(CENTER, 585), text_input="Help", font=get_font(25), base_color="#d7fcd4", hovering_color="White")
 
-        for button in [SINGLE_PLAYER_BUTTON, MULTI_PLAYER_BUTTON, QUIT_BUTTON]:
+        for button in [SINGLE_PLAYER_BUTTON, MULTI_PLAYER_BUTTON, QUIT_BUTTON, HELP_BUTTON]:
             button.changeColor(MENU_MOUSE_POS)
             button.update(SCREEN)
         
@@ -285,6 +326,8 @@ def menu():
                     multi_player()
                 if QUIT_BUTTON.checkForInput(MENU_MOUSE_POS):
                     py.exit()
+                if HELP_BUTTON.checkForInput(MENU_MOUSE_POS):
+                    help()
         
         py.display.update()
 

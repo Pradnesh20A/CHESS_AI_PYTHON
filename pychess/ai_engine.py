@@ -2,9 +2,8 @@
 # The Chess AI class
 # Will utilize minimax and alpha beta pruning
 #
-# Author: Boo Sung Kim
-# Note: Code inspired from the pseudocode by Sebastian Lague
-# from enums import Player
+# Author: A.Pradnesh(19MIS0131)
+
 # TODO: switch undo moves to stack data structure
 import chess_engine
 from enums import Player
@@ -186,4 +185,4 @@ class chess_ai:
                 elif piece.get_name() is "n":
                     return -30
                 elif piece.get_name() is "p":
-                    return -10
+                    return -10         
